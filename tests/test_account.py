@@ -53,3 +53,62 @@ class TestAccountModel(TestCase):
         account.create()
         self.assertEqual(len(Account.all()), 1)
 
+    def test_repr(self):
+        # Test the representation of a account
+        account = Account()
+        account.name = "Foo"
+        self.assertEqual(str(account), "<Account 'Foo'>")
+
+    def test_to_dict(self):
+        #Test account dict
+        data = ACCOUNT_DATA[self.rand]
+        account = Account(**data)
+        result = account.to_dict()
+        self.assertEqual(account.name, result["name"])
+        self.assertEqual(account.email, result["email"])
+        self.assertEqual(account.phone_number, result["phone_number"])
+        self.assertEqual(account.disabled, result["disabled"])
+        self.assertEqual(account.date_joined, result["date_joined"])
+
+    def test_from_dict(self):
+        #Test from_dict
+        data = ACCOUNT_DATA[self.rand]
+        account = Account(**data)
+        tmp = account.to_dict()
+        result = account.from_dict(tmp)
+
+    def test_update(self):
+        #Test update
+        account = Account()
+        account.create()
+        account.id = 1
+        account.update()
+       
+        self.assertEqual(account.id, 1)
+
+        with self.assertRaises(DataValidationError):
+            account.id = None
+            account.update()
+
+    def test_delete(self):
+        # Test delete
+        account = Account()
+        account.create()
+        account.name = "Foo"
+        account.delete()
+        self.assertEqual(account.name, "Foo")
+
+    def test_find(self):
+        account = Account()
+        account.create()
+        account.id = 1
+        account.find(1)
+        self.assertEqual(account.id, 1)
+
+
+        
+        
+        
+
+
+
